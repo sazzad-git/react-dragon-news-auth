@@ -1,28 +1,24 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../Shared/Navbar/Navbar";
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 
-const Login = () => {
-  const { signIn } = useContext(AuthContext);
-  const location = useLocation();
-  const navigate = useNavigate();
-  console.log(location);
+const Register = () => {
+  const { createUser } = useContext(AuthContext);
 
-  const handleLogin = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
-    console.log(e.currentTarget);
     const form = new FormData(e.currentTarget);
-    console.log(form.get("email"));
+    const name = form.get("name");
+    const photo = form.get("photo");
     const email = form.get("email");
     const password = form.get("password");
+    console.log(name, photo, email, password);
 
-    signIn(email, password)
+    // create user
+    createUser(email, password)
       .then((result) => {
         console.log(result.user);
-
-        // navigate after login
-        navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {
         console.log("error", error.message);
@@ -32,11 +28,35 @@ const Login = () => {
     <div>
       <Navbar></Navbar>
       <div>
-        <h2 className="my-10 text-3xl text-center">Please Login</h2>
+        <h2 className="my-10 text-3xl text-center">Register Now</h2>
         <form
-          onSubmit={handleLogin}
+          onSubmit={handleRegister}
           className="mx-auto card-body md:w-3/4 lg:w-1/2"
         >
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Name</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              className="input input-bordered"
+              required
+            />
+          </div>
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Photo URL</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Photo URL"
+              name="photo"
+              className="input input-bordered"
+              required
+            />
+          </div>
           <div className="form-control">
             <label className="label">
               <span className="label-text">Email</span>
@@ -49,6 +69,7 @@ const Login = () => {
               required
             />
           </div>
+
           <div className="form-control">
             <label className="label">
               <span className="label-text">Password</span>
@@ -67,13 +88,13 @@ const Login = () => {
             </label>
           </div>
           <div className="mt-6 form-control">
-            <button className="btn btn-primary">Login</button>
+            <button className="btn btn-primary">Register</button>
           </div>
         </form>
         <p className="text-center">
-          Do not have an account?
-          <Link className="font-bold text-blue-600" to="/register">
-            Register Now
+          Already have an account?
+          <Link className="font-bold text-blue-600" to="/login">
+            Please Login
           </Link>
         </p>
       </div>
@@ -81,4 +102,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
